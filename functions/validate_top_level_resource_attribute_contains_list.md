@@ -1,7 +1,7 @@
 # Function: validate_top_level_resource_attribute_contains_list
 This function validates that a specific top-level attribute that is a map or list contains all members of a given list for all instances of a specific resource in all modules. It uses the [tfplan](https://www.terraform.io/docs/enterprise/sentinel/import/tfplan.html) import.
 
-If you need to check a nested attribute deeper within a resource, you can use the more complex function [validate_nested_attribute_contains_list](./validate_nested_attribute_contains_list.md).
+If you need to check a nested attribute deeper within a resource, you can use the more complex function [validate_nested_resource_attribute_contains_list](./validate_nested_resource_attribute_contains_list.md).
 
 ## Declaration and Arguments
 

@@ -3,7 +3,7 @@ This function validates that a specific attribute that is a map or list contains
 
 It uses the [tfplan](https://www.terraform.io/docs/enterprise/sentinel/import/tfplan.html) import.
 
-If you only need to check a top-level attribute of a resource, you can use the simpler function [validate_top_level_attribute_contains_list](./validate_top_level_attribute_contains_list.md). But this function works for top-level attributes too.
+If you only need to check a top-level attribute of a resource, you can use the simpler function [validate_top_level_resource_attribute_contains_list](./validate_top_level_resource_attribute_contains_list.md). But this function works for top-level attributes too.
 
 ## Declaration and Arguments
 
