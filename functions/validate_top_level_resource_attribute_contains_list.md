@@ -9,9 +9,9 @@ If you need to check a nested attribute deeper within a resource, you can use th
 `validate_top_level_resource_attribute_contains_list = func(resource_type, attribute, required_values)`
 
 ### Arguments
-*resource_type*: the type of resource to validate
-*attribute*: a top-level attribute of the resource that is a map or list
-*required_values*: a list of required values for the attribute
+* **resource_type**: the type of resource to validate
+* **attribute**: a top-level attribute of the resource that is a map or list
+* **required_values**: a list of required values for the attribute
 
 ## Required Imports
 This function requires the following import:

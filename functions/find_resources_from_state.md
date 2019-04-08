@@ -7,7 +7,7 @@ This function finds all instances of a specific resource from all modules using 
 `find_resources_from_state = func(r)`
 
 ### Arguments
-*r*: the type of resource to find
+* **r**: the type of resource to find
 
 ## Required Imports
 This function requires the following import:

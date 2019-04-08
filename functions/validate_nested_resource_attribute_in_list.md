@@ -11,9 +11,9 @@ If you only need to check a top-level attribute of a resource, you can use the s
 `validate_nested_resource_attribute_in_list = func(resource_type, attribute, allowed_values)`
 
 ### Arguments
-*resource_type*: the type of resource to validate
-*attribute*: a string representing a nested attribute of the resource. It is represented with a chain of nested attributes separated by ".". Examples are "tags.Name" and "storage_image_reference.0.publisher". If the plan shows a long, numeric ID for an index, replace it with 0.
-*allowed_values*: the list of allowed values for the attribute
+* **resource_type**: the type of resource to validate
+* **attribute**: a string representing a nested attribute of the resource. It is represented with a chain of nested attributes separated by ".". Examples are "tags.Name" and "storage_image_reference.0.publisher". If the plan shows a long, numeric ID for an index, replace it with 0.
+* **allowed_values**: the list of allowed values for the attribute
 
 ## Required Imports
 This function requires the following imports:

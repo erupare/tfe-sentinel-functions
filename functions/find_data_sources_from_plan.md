@@ -7,7 +7,7 @@ This function finds all instances of a specific data source from all modules usi
 `find_data_sources_from_plan = func(d)`
 
 ### Arguments
-*d*: the type of data source to find
+* **d**: the type of data source to find
 
 ## Required Imports
 This function requires the following import:

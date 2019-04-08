@@ -9,9 +9,9 @@ It uses the [tfplan](https://www.terraform.io/docs/enterprise/sentinel/import/tf
 `validate_repeated_nested_resource_attribute_in_list = func(resource_type, attribute, allowed_values)`
 
 ### Arguments
-*resource_type*: the type of resource to validate
-*attribute*: a string representing a nested repeated attribute of the resource. It is represented by a chain of nested attributes separated by "." such as `ingress.*.cidr_blocks.*` in which repeated indices are represented by `*`.
-*allowed_values*: the list of allowed values for the attribute
+* **resource_type**: the type of resource to validate
+* **attribute**: a string representing a nested repeated attribute of the resource. It is represented by a chain of nested attributes separated by "." such as `ingress.*.cidr_blocks.*` in which repeated indices are represented by `*`.
+* **allowed_values**: the list of allowed values for the attribute
 
 ## Required Imports
 This function requires the following imports:

@@ -7,8 +7,8 @@ This function evaluates a repeated attribute from a resource. It can do this for
 `evaluate_repeated_attribute = func(r, attribute)`
 
 ### Arguments
-*r*: an instance of a resource to validate that should be given in the initial call in the form "r.applied" or "r.attr" depending on whether r is derived from the plan or the state.
-*attribute*: a string representing a nested repeated attribute of the resource. It is represented by a chain of nested attributes separated by "." such as `ingress.*.cidr_blocks.*` in which indices that could be repeated are represented by `*`.
+* **r**: an instance of a resource to validate that should be given in the initial call in the form "r.applied" or "r.attr" depending on whether r is derived from the plan or the state.
+* **attribute**: a string representing a nested repeated attribute of the resource. It is represented by a chain of nested attributes separated by "." such as `ingress.*.cidr_blocks.*` in which indices that could be repeated are represented by `*`.
 
 ## Required Imports
 This function requires the following imports:

@@ -7,8 +7,8 @@ This function evaluates an attribute from a resource. It can do this for attribu
 `evaluate_attribute = func(r, attribute)`
 
 ### Arguments
-*r*: an instance of a resource to validate that should be given in the initial call in the form "r.applied" or "r.attr" depending on whether r is derived from the plan or the state.
-*attribute*: a string representing the attribute to be evaluated. If the attribute is nested, only use "." between its components even for indices of lists and blocks. Indices represented by long IDs should be converted to indices such as 0, 1, 2, and so on.
+* **r**: an instance of a resource to validate that should be given in the initial call in the form "r.applied" or "r.attr" depending on whether r is derived from the plan or the state.
+* **attribute**: a string representing the attribute to be evaluated. If the attribute is nested, only use "." between its components even for indices of lists and blocks. Indices represented by long IDs should be converted to indices such as 0, 1, 2, and so on.
 
 ## Required Imports
 This function requires the following imports:
