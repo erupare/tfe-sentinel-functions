@@ -40,6 +40,13 @@ These functions evaluate attributes:
 * [evaluate_attribute](./functions/evaluate_attribute.md): evaluates an attribute from a resource. It can do this for attributes arbitrarily deep inside the resource since it calls itself recursively.
 * [evaluate_repeated_attribute](./functions/evaluate_repeated_attribute.md): evaluates a repeated attribute from a resource. It can do this for attributes arbitrarily deep inside the resource since it calls itself recursively.
 
+## Some Comments on the Functions
+The following comments about these functions might be useful or interesting.
+1. Functions that support nested attributes support them arbitrarily deep within resources by using recursion to parse the attributes as "chained attributes".
+1. The [evaluate_attribute](./functions/evaluate_attribute.md) function and functions that call it expect chained attributes like `tags.Name` and  `storage_image_reference.0.publisher`. This function expects any index of a list to only occur once. If a plan log for the resource you are working with shows a longer ID, please use 0 instead. You could also use 1, 2, 3, etc. if calling the function multiple times to processing multiple values of the index, but it is probably then better to use a function that calls the evaluate_repeated_attribute function instead of this one.  This function returns the actual value of the evaluated attribute.
+1. The [evaluate_repeated_attribute](./functions/evaluate_repeated_attribute.md) function and functions that call it expect chained attributes like `ingress.*.cidr_blocks.*` in which `*` represents repeating indices. This function returns a list of evaluated attributes.
+1. I use the `r.applied[attribute1][attribute2][...][attributeN]` syntax instead of the more familiar `r.applied.attribut1.attribute2.(...).attributeN` syntax since the attribute components end up being strings which can be used in the first syntax.
+ 
 ## Policies That Use the Functions
 The following polices use many of the above functions. All of the functions starting with "validate" and "evaluate" are covered, but the `find_resources_from_plan` function is the only one of the "find" functions included. Using the other "find" functions is similar to using that one.
 * [restrict_aws_instance_types](./policies/restrict_aws_instance_types.sentinel): restricts all instances of the aws_instance resource in the plan to only allow instance_type (size) from the allowed_types list. This uses the [validate_top_level_resource_attribute_in_list](./functions/validate_top_level_resource_attribute_in_list.md) and [find_resources_from_plan](./functions/find_resources_from_plan.md) functions.

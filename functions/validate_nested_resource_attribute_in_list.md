@@ -56,7 +56,7 @@ allowed_publishers = [
   "MicrosoftWindowsServer",
   "RedHat",
 ]
-validate_nested_resource_attribute_in_list("azurerm_virtual_machine", "storage_image_reference.3904372903.publisher", allowed_publishers)
+validate_nested_resource_attribute_in_list("azurerm_virtual_machine", "storage_image_reference.0.publisher", allowed_publishers)
 
 allowed_machine_types = [
   "n1-standard-2",
