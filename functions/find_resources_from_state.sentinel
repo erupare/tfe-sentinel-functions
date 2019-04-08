@@ -1,0 +1,21 @@
+# This function finds all instances of a specific resource
+# from all modules using the tfstate import
+
+find_resources_from_state = func(r) {
+
+  # Arguments
+  ## r: the type of resource to find
+
+  # Start with an empty map
+  resources = []
+
+  # Iterate over all modules in the tfstate import
+  for tfstate.module_paths as path {
+    # Append all resources of the specified type
+    # If a module does not have any resources of the
+    # specified type in the state, we append the empty map, {}.
+    append(resources, (tfstate.module(path).resources[r] else {}))
+  }
+
+  return resources
+}

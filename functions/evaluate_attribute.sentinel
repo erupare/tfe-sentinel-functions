@@ -1,0 +1,57 @@
+# This function evaluates an attribute from a resource.
+# It can do this for attributes deep inside the resource
+# since it calls itself recursively.
+
+evaluate_attribute = func(r, attribute) {
+
+  # Arguments:
+  ## r: an instance of a resource to validate that should be given in the
+  ### initial call in the form "r.applied" or "r.attr" depending on whether
+  ### r is derived from the plan or the state.
+  ## attribute: a string representing the attribute to be evaluated
+  ### If the attribute is nested, only use "." between its components
+  ### even for indices of lists and blocks. Indices represented by long IDs
+  ### should be converted to indices that start with 0.
+
+
+  # Split the attribute into a list, using "." as the separator
+  attributes = strings.split(attribute, ".")
+
+  # Convert numeric strings to integers for indices
+  if attributes[0] matches "^[0-9]+$" {
+    a = int(attributes[0])
+    # Make sure r is of type list
+    if types.type_of(r) is not "list" {
+      return "undefined"
+    }
+  } else {
+    a = attributes[0]
+  }
+
+  # Append the current attribute to the resource instance
+  new_r = r[a]
+
+  # Validate that new_r exists
+  if (length(new_r) else 0) == 0 {
+    return "undefined"
+  }
+
+  # Process based on length of attributes
+  # being greater than or equal to 1
+  if length(attributes) > 1 {
+
+    # Strip first element from attributes
+    attributes = attributes[1:length(attributes)]
+    attribute = strings.join(attributes, ".")
+
+    # Make recursive call
+    return evaluate_attribute(new_r, attribute)
+  } else {
+
+    # We reached the end of the attribute and can stop the
+    # recursive calls and return the value of the attribute
+    return new_r
+
+  }
+
+}

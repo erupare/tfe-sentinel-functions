@@ -1,0 +1,21 @@
+# This function finds all instances of a specific data source
+# from all modules using the tfconfig import
+
+find_data_sources_from_config = func(d) {
+
+  # Arguments
+  ## d: the type of data source to find
+
+  # Start with an empty map
+  data_sources = []
+
+  # Iterate over all modules in the tfconfig import
+  for tfconfig.module_paths as path {
+    # Append all data sources of the specified type
+    # If a module does not have any data sources of the
+    # specified type in the config, we append the empty map, {}.
+    append(data_sources, (tfconfig.module(path).data[d] else {}))
+  }
+
+  return data_sources
+}

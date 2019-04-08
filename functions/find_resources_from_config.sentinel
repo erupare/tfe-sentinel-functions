@@ -1,0 +1,19 @@
+# This function finds all instances of a specific resource
+# from all modules using the tfconfig import
+
+find_resources_from_config = func(r) {
+
+  # Arguments
+  ## r: the type of resource to find
+
+  # Start with an empty map
+  resources = []
+  # Iterate over all modules in the tfconfig import
+  for tfconfig.module_paths as path {
+    # Append all resources of the specified type
+    # If a module does not have any resources of the
+    # specified type in the config, we append the empty map, {}.
+    append(resources, (tfconfig.module(path).resources[r] else {}))
+  }
+  return resources
+}

@@ -1,0 +1,175 @@
+# This policy restricts all instances of the google_compute_instance
+# resource in the plan to have all service account scopes in the
+# mandatory_scopes list.
+
+# It uses the following functions:
+## validate_nested_resource_attribute_contains_list
+## find_resources_from_plan
+## evaluate_attribute
+
+### imports ###
+import "tfplan"
+import "strings"
+import "types"
+
+### validate_nested_resource_attribute_contains_list ###
+# This function validates that a specific (possibly nested) attribute
+# that is a map or list contains all members of a given list
+# for all instances of a specific resource in all modules
+
+validate_nested_resource_attribute_contains_list = func(resource_type, attribute, required_values) {
+
+  # Arguments
+  ## resource_type: the type of resource to validate
+  ## attribute: a string representing a nested attribute
+  ### of the resource represented with a chain of nested
+  ### attributes separated by ".". Examples are "tags.Name" and
+  ### "storage_image_reference.0.publisher".
+  ## required_values: a list of required values for the attribute
+
+  # Get all resources of the specified type
+  list_of_resource_maps = find_resources_from_plan(resource_type)
+
+  # Extract the maps from the main list
+  for list_of_resource_maps as resource_map {
+    # For each map, get the name and map of resources
+    for resource_map as name, resources {
+      # Get each resource instance
+      for resources as _, r {
+
+        # Call the evaluate_attribute function
+        applied_value = evaluate_attribute(r.applied, attribute)
+
+        # Check if evaluate_attribute returned undefined
+        if types.type_of(applied_value) is "string" and
+          applied_value is "undefined" {
+          print("resource", name,
+            "has attribute", attribute,
+            "that is missing or computed")
+          return false
+        }
+
+        # Get each member of the required_values list
+        for required_values as rv {
+          # Test that the attribute contains the member of the list
+          if applied_value not contains rv {
+            # Print name of first violator along with
+            # attribute, required value, and the list
+            print("resource", name,
+              "has attribute", attribute,
+              "that is missing required value", rv,
+              "from the list:", required_values)
+            return false
+          }
+        }
+      }
+    }
+  }
+
+  print("No violators of type", resource_type, "for attribute",
+    attribute, "against the list:", required_values)
+  return true
+}
+
+### find_resources_from_plan ###
+# This function gets all instances of a specific resource
+# from all modules using the tfplan import
+
+find_resources_from_plan = func(r) {
+
+  # Arguments
+  ## r: the type of resource to find
+
+  # Start with an empty map
+  resources = []
+
+  # Iterate over all modules in the tfplan import
+  for tfplan.module_paths as path {
+    # Append all resources of the specified type
+    # If a module does not have any resources of the
+    # specified type in the plan, we append the empty map, {}.
+    append(resources, (tfplan.module(path).resources[r] else {}))
+  }
+
+  return resources
+}
+
+
+### evaluate_attribute ###
+# This function evaluates an attribute from a resource.
+# It can do this for attributes deep inside the resource
+# since it calls itself recursively.
+
+evaluate_attribute = func(r, attribute) {
+
+  # Arguments:
+  ## r: an instance of a resource to validate that should be given in the
+  ### initial call in the form "r.applied" or "r.attr" depending on whether
+  ### r is derived from the plan or the state.
+  ## attribute: a string representing the attribute to be evaluated
+  ### If the attribute is nested, only use "." between its components
+  ### even for indices of lists and blocks. Indices represented by long IDs
+  ### should be converted to indices that start with 0.
+
+
+  # Split the attribute into a list, using "." as the separator
+  attributes = strings.split(attribute, ".")
+
+  # Convert numeric strings to integers for indices
+  if attributes[0] matches "^[0-9]+$" {
+    a = int(attributes[0])
+    # Make sure r is of type list
+    if types.type_of(r) is not "list" {
+      return "undefined"
+    }
+  } else {
+    a = attributes[0]
+  }
+
+  # Append the current attribute to the resource instance
+  new_r = r[a]
+
+  # Validate that new_r exists
+  if (length(new_r) else 0) == 0 {
+    return "undefined"
+  }
+
+  # Process based on length of attributes
+  # being greater than or equal to 1
+  if length(attributes) > 1 {
+
+    # Strip first element from attributes
+    attributes = attributes[1:length(attributes)]
+    attribute = strings.join(attributes, ".")
+
+    # Make recursive call
+    return evaluate_attribute(new_r, attribute)
+  } else {
+
+    # We reached the end of the attribute and can stop the
+    # recursive calls and return the value of the attribute
+    return new_r
+
+  }
+
+}
+
+### List of mandatory scopes ###
+mandatory_scopes = [
+  "https://www.googleapis.com/auth/compute.readonly",
+  "https://www.googleapis.com/auth/monitoring",
+  "https://www.googleapis.com/auth/servicecontrol",
+]
+
+### Rule to enforce allowed scopes ###
+check_mandatory_scopes = rule {
+  validate_nested_resource_attribute_contains_list(
+    "google_compute_instance",
+    "service_account.0.scopes",
+    mandatory_scopes)
+}
+
+### main rule that requires other rules to be true ###
+main = rule {
+  (check_mandatory_scopes) else true
+}

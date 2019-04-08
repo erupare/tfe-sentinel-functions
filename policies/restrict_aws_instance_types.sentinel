@@ -1,0 +1,110 @@
+# This policy restricts all instances of the aws_instance resource
+# in the plan to only allow instance_type (size) from the allowed_types
+# list.
+
+# It uses the following functions:
+## validate_top_level_resource_attribute_in_list
+## find_resources_from_plan
+
+### imports ###
+import "tfplan"
+import "strings"
+import "types"
+
+### validate_top_level_resource_attribute_in_list  ###
+# This function validates that a specific top-level attribute of a
+# specific resource is within a given list of allowed values for all
+# instances of the resource in all modules.
+# It also validates that the attribute exists in each instance.
+
+validate_top_level_resource_attribute_in_list = func(resource_type, attribute, allowed_values) {
+
+  # Arguments
+  ## resource_type: the type of resource to validate
+  ## attribute: a top-level attribute of the resource
+  ## allowed_values is the list of allowed values for the attribute
+
+  # Get all resources of the specified type
+  list_of_resource_maps = find_resources_from_plan(resource_type)
+
+  # Extract the maps from the main list
+  for list_of_resource_maps as resource_map {
+    # For each map, get the name and map of resources
+    for resource_map as name, resources {
+      # Get each resource instance
+      for resources as _, r {
+
+        # Validate that the attribute is not computed
+        # and assign value to applied_value
+        # Note that this also validates that it exists
+        if (not (r.diff[attribute].computed else true)) {
+          applied_value = r.applied[attribute]
+        } else {
+          print("resource", name,
+            "has a missing or computed attribute:", attribute)
+          return false
+        }
+
+        # Check if applied_value is in the allowed_values list
+        # Convert undefined applied_value to null to prevent error
+        if applied_value not in allowed_values {
+          # Print name of first violator along with
+          # attribute, disallowed value, and the list
+          print("resource", name,
+            "has attribute", attribute,
+            "with value", applied_value,
+            "that is not in the list:", allowed_values)
+          return false
+        }
+      }
+    }
+  }
+
+  # Indicate that there were no violators and return true
+  print("No violators of type", resource_type, "for attribute",
+    attribute, "against the list:", allowed_values)
+  return true
+}
+
+### find_resources_from_plan ###
+# This function gets all instances of a specific resource
+# from all modules using the tfplan import
+
+find_resources_from_plan = func(r) {
+
+  # Arguments
+  ## r: the type of resource to find
+
+  # Start with an empty map
+  resources = []
+
+  # Iterate over all modules in the tfplan import
+  for tfplan.module_paths as path {
+    # Append all resources of the specified type
+    # If a module does not have any resources of the
+    # specified type in the plan, we append the empty map, {}.
+    append(resources, (tfplan.module(path).resources[r] else {}))
+  }
+
+  return resources
+}
+
+### A list of allowed instance types ###
+allowed_types = [
+  "t2.small",
+  "t2.medium",
+  "t2.large",
+]
+
+### Rule to restrict instance types allowed ###
+instance_type_allowed = rule {
+  validate_top_level_resource_attribute_in_list(
+    "aws_instance",
+    "instance_type",
+    allowed_types)
+}
+
+### main rule ###
+main = rule {
+  (instance_type_allowed) else true
+}

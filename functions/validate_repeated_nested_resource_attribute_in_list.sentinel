@@ -1,0 +1,59 @@
+# This function validates that a specific repeated
+# attribute of a specific resource is in a given list of allowed
+# values for all instances of the resource in all modules.
+# It also validates that the attribute exists in each instance.
+
+validate_repeated_nested_resource_attribute_in_list = func(resource_type, attribute, allowed_values) {
+
+  # Arguments:
+  ## resource_type: the type of resource to validate
+  ## attribute: a string representing a nested attribute
+  ### of the resource represented by a chain of nested
+  ### attributes separated by "." such as "ingress.*.cidr_blocks.*"
+  ### in which repeated indices are represented by "*"
+  ## allowed_values: the list of allowed values for the attribute
+
+  # Get all resources of the specified type
+  list_of_resource_maps = find_resources_from_plan(resource_type)
+
+  # Extract the maps from the main list
+  for list_of_resource_maps as resource_map {
+    # For each map, get the name and map of resources
+    for resource_map as name, resources {
+      # Get each resource instance
+      for resources as _, r {
+
+        # Call the evaluate_repeated_attribute function
+        applied_values = evaluate_repeated_attribute(r.applied, attribute)
+
+        # Check if evaluate_repeated_attribute returned empty list
+        if (length(applied_values) else 0) == 0 {
+          print("resource", name,
+            "has attribute", attribute,
+            "that is missing or computed")
+          return false
+        }
+
+        # Check if all items in applied_values are in the
+        # allowed_values list
+        for applied_values as av {
+          if av not in allowed_values {
+            # Print name of first violator along with
+            # attribute, disallowed value, and the list
+            print("resource", name,
+              "has occurence of attribute", attribute,
+              "with value", av,
+              "that is not in the list:", allowed_values)
+            return false
+          }
+        }
+      }
+    }
+  }
+
+  # Indicate that there were no violators and return true
+  print("No violators of type", resource_type, "for attribute",
+    attribute, "against the list:", allowed_values)
+  return true
+
+}

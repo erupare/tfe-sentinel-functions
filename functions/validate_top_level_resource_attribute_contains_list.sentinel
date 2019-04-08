@@ -1,0 +1,56 @@
+# This function validates that a specific top-level attribute
+# that is a map or list contains all members of a given list
+# for all instances of a specific resource in all modules
+
+validate_top_level_resource_attribute_contains_list = func(resource_type, attribute, required_values) {
+
+  # Arguments
+  ## resource_type: the type of resource to validate
+  ## attribute: a top-level attribute of the resource that is a map or list
+  ## required_values: a list of required values for the attribute
+
+  # Get all resources of the specified type
+  list_of_resource_maps = find_resources_from_plan(resource_type)
+
+  # Extract the maps from the main list
+  for list_of_resource_maps as resource_map {
+    # For each map, get the name and map of resources
+    for resource_map as name, resources {
+      # Get each resource instance
+      for resources as _, r {
+
+        # Validate that the nested attribute is not computed.
+        # Note that this also validates that it exists
+        # We check "attribute.%" and "attribute.#" because
+        # an attribute of type map or list won't show up in
+        # the diff
+        if (r.diff[attribute + ".%"].computed else true) and
+        (r.diff[attribute + ".#"].computed else true) {
+          print("resource", name,
+            "has a missing or computed attribute:", attribute)
+          return false
+        } else {
+          applied_value = r.applied[attribute]
+        }
+
+        # Get each member of the required_values list
+        for required_values as rv {
+          # Test that the attribute contains the member of the list
+          if applied_value not contains rv {
+            # Print name of first violator along with
+            # attribute, required value, and the list
+            print("resource", name,
+              "has attribute", attribute,
+              "that is missing required value", rv,
+              "from the list:", required_values)
+            return false
+          }
+        }
+      }
+    }
+  }
+
+  print("No violators of type", resource_type, "for attribute",
+    attribute, "against the list:", required_values)
+  return true
+}

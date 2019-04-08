@@ -1,0 +1,90 @@
+# This function evaluates a repeated attribute from a resource.
+# It can do this for attributes deep inside the resource
+# since it calls itself recursively.
+
+evaluate_repeated_attribute = func(r, attribute) {
+
+  # Arguments:
+  ## r: an instance of a resource to validate that should be given in the
+  ### initial call in the form "r.applied" or "r.attr" depending on whether
+  ### r is derived from the plan or the state.
+  ## attribute: a string representing a nested repeated attribute of the
+  ### resource. It is represented by a chain of nested attributes separated
+  ### by "." such as `ingress.*.cidr_blocks.*` in which indices that could
+  ### be repeated are represented by `*`.
+
+
+  # Declare attribute_values list
+  attribute_values = []
+
+  # Split the attribute into a list, using "." as the separator
+  attributes = strings.split(attribute, ".")
+
+  # Process repeated index
+  if attributes[0] is "*" {
+    # Make sure r is of type list
+    if types.type_of(r) is not "list" {
+      return attribute_values
+    } else {
+      # Process each instance of the index
+      for r as index, new_r {
+
+        # Validate that new_r exists
+        # If not, stop processing for this index
+        if (length(new_r) else 0) == 0 {
+          break
+        }
+
+        # Process based on length of attributes
+        # being greater than or equal to 1
+        if length(attributes) > 1 {
+
+          # Strip first element from attributes
+          new_attributes = attributes[1:length(attributes)]
+          new_attribute = strings.join(new_attributes, ".")
+
+          # Make recursive call
+          attribute_values += evaluate_repeated_attribute(new_r, new_attribute)
+
+        } else {
+          # We reached the end of the attribute and can just
+          # add the value of the attribute
+          attribute_values += [new_r]
+        }
+      }
+
+      # Done with attribute component that is index
+      return attribute_values
+    }
+  } else {
+    # Process non-repeated attribute component
+
+    # Append the current attribute to the resource instance
+    new_r = r[attributes[0]]
+
+    # Validate that new_r exists before processing more
+    if (length(new_r) else 0) == 0 {
+      return attribute_values
+    }
+
+    # Process based on length of attributes
+    # being greater than or equal to 1
+    if length(attributes) > 1 {
+
+      # Strip first element from attributes
+      new_attributes = attributes[1:length(attributes)]
+      new_attribute = strings.join(new_attributes, ".")
+
+      # Make recursive call
+      attribute_values += evaluate_repeated_attribute(new_r, new_attribute)
+
+    } else {
+      # We reached the end of the attribute and can just
+      # add the value of the attribute
+      attribute_values += [new_r]
+    }
+
+    # Done with attribute component that is not index
+    return attribute_values
+  }
+}

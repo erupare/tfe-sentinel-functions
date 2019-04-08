@@ -1,0 +1,21 @@
+# This function finds all instances of a specific resource
+# from all modules using the tfplan import
+
+find_resources_from_plan = func(r) {
+
+  # Arguments
+  ## r: the type of resource to find
+
+  # Start with an empty map
+  resources = []
+
+  # Iterate over all modules in the tfplan import
+  for tfplan.module_paths as path {
+    # Append all resources of the specified type
+    # If a module does not have any resources of the
+    # specified type in the plan, we append the empty map, {}.
+    append(resources, (tfplan.module(path).resources[r] else {}))
+  }
+
+  return resources
+}
