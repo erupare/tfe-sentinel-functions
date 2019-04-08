@@ -25,8 +25,8 @@ import "types"
 Be sure to include them in any policy that uses this function. The "strings" and "types" imports are needed by the evaluate_attribute function that this function calls.
 
 ## Custom Functions Used
-[find_resources_from_plan](./find_resources_from_plan.md)
-[evaluate_attribute](./evaluate_attribute.md)
+* [find_resources_from_plan](./find_resources_from_plan.md)
+* [evaluate_attribute](./evaluate_attribute.md)
 Be sure to past their code into your policy.
 
 ## What It Returns
