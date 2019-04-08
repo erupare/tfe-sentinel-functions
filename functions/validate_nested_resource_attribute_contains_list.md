@@ -27,7 +27,8 @@ Be sure to include them in any policy that uses this function. The "strings" and
 ## Custom Functions Used
 * [find_resources_from_plan](./find_resources_from_plan.md)
 * [evaluate_attribute](./evaluate_attribute.md)
-Be sure to past their code into your policy.
+
+Be sure to past their code into any policy that uses this function.
 
 ## What It Returns
 This function returns true or false, depending on whether or not any instances of the resource of the specified type do or do not include all members of the given list in the specified attribute. It also returns false when the attribute is missing or computed.

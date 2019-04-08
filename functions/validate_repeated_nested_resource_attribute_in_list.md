@@ -25,7 +25,8 @@ Be sure to include them in any policy that uses this function. The "strings" and
 ## Custom Functions Used
 * [find_resources_from_plan](./find_resources_from_plan.md)
 * [evaluate_repeated_resource_attribute](./evaluate_repeated_resource_attribute.md)
-Be sure to past their code into your policy.
+
+Be sure to past their code into any policy that uses this function.
 
 ## What It Returns
 This function returns true or false, depending on whether or not any instances of the resource of the specified type have a value of the specified attribute that is not in the given list. It also returns false when the no occurences of the attribute are found or are all computed.

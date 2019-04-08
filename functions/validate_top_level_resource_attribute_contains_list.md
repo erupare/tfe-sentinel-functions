@@ -23,6 +23,8 @@ Be sure to include it in any policy that uses this function.
 ## Custom Functions Used
 * [find_resources_from_plan](./find_resources_from_plan.md)
 
+Be sure to past its code into any policy that uses this function.
+
 ## What It Returns
 This function returns true or false, depending on whether or not any instances of the resource of the specified type do or do not include all members of the given list in the specified attribute.
 
