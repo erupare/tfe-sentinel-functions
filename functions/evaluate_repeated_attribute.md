@@ -1,4 +1,4 @@
-# Function: evaluate_repeated_attribute
+# evaluate_repeated_attribute
 This function evaluates a repeated attribute from a resource. It can do this for attributes arbitrarily deep inside the resource since it calls itself recursively.
 
 ## Declaration and Arguments

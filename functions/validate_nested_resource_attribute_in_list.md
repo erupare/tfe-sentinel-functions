@@ -1,4 +1,4 @@
-# Function: validate_nested_resource_attribute_in_list
+# validate_nested_resource_attribute_in_list
 This function validates that a specific attribute of all instances of a specific resource in all modules is within a given list of allowed values. The attribute can be nested arbitrarily deep within the resource structure if it is provided as a chain of attributes separated by "." such as "tags.Name" or "storage_image_reference.0.publisher".
 
 It uses the [tfplan](https://www.terraform.io/docs/enterprise/sentinel/import/tfplan.html) import.

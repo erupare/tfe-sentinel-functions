@@ -1,4 +1,4 @@
-# Function: find_resources_from_plan
+# find_resources_from_plan
 This function finds all instances of a specific resource from all modules using the [tfplan](https://www.terraform.io/docs/enterprise/sentinel/import/tfplan.html) import.
 
 ## Declaration and Arguments

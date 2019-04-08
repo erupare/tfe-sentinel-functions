@@ -1,4 +1,4 @@
-# Function: validate_top_level_resource_attribute_in_list
+# validate_top_level_resource_attribute_in_list
 This function validates that a specific top-level attribute of all instances of a specific resource in all modules is within a given list of allowed values. It uses the [tfplan](https://www.terraform.io/docs/enterprise/sentinel/import/tfplan.html) import.
 
 If you need to check a nested attribute deeper within a resource, you can use the more complex function [validate_nested_resource_attribute_in_list](./validate_nested_resource_attribute_in_list.md).

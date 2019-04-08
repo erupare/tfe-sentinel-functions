@@ -1,4 +1,4 @@
-# Function: find_data_sources_from_config
+# find_data_sources_from_config
 This function finds all instances of a specific data source from all modules using the [tfconfig](https://www.terraform.io/docs/enterprise/sentinel/import/tfconfig.html) import.
 
 ## Declaration and Arguments

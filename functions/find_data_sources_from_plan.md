@@ -1,4 +1,4 @@
-# Function: find_data_sources_from_plan
+# find_data_sources_from_plan
 This function finds all instances of a specific data source from all modules using the [tfplan](https://www.terraform.io/docs/enterprise/sentinel/import/tfplan.html) import.
 
 ## Declaration and Arguments

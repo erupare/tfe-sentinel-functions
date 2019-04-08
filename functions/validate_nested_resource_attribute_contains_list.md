@@ -1,4 +1,4 @@
-# Function: validate_nested_resource_attribute_contains_list
+# validate_nested_resource_attribute_contains_list
 This function validates that a specific attribute that is a map or list contains all members of a given list for all instances of a specific resource in all modules. The attribute can be nested arbitrarily deep within the resource structure if it is provided as a chain of attributes separated by "." such as "tags.Name" or "storage_image_reference.0.publisher".
 
 It uses the [tfplan](https://www.terraform.io/docs/enterprise/sentinel/import/tfplan.html) import.

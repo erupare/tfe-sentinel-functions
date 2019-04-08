@@ -1,4 +1,4 @@
-# Function: validate_repeated_nested_resource_attribute_in_list
+# validate_repeated_nested_resource_attribute_in_list
 This function validates that a specific repeated attribute of all instances of a specific resource in all modules is in a given list of allowed values. The attribute can be nested arbitrarily deep within the resource structure if it is provided as a chain of attributes separated by "." such as `ingress.*.cidr_blocks.*` in which repeated indices are represented by `*`.
 
 It uses the [tfplan](https://www.terraform.io/docs/enterprise/sentinel/import/tfplan.html) import.
@@ -24,7 +24,7 @@ Be sure to include them in any policy that uses this function. The "strings" and
 
 ## Custom Functions Used
 * [find_resources_from_plan](./find_resources_from_plan.md)
-* [evaluate_repeated_resource_attribute](./evaluate_repeated_resource_attribute.md)
+* [evaluate_repeated_attribute](./evaluate_repeated_attribute.md)
 
 Be sure to past their code into any policy that uses this function.
 

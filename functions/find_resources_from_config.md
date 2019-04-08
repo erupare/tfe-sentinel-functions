@@ -1,4 +1,4 @@
-# Function: find_resources_from_config
+# find_resources_from_config
 This function finds all instances of a specific resource from all modules using the [tfconfig](https://www.terraform.io/docs/enterprise/sentinel/import/tfconfig.html) import.
 
 ## Declaration and Arguments

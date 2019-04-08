@@ -1,4 +1,4 @@
-# Function: find_data_sources_from_state
+# find_data_sources_from_state
 This function finds all instances of a specific data source from all modules using the [tfstate](https://www.terraform.io/docs/enterprise/sentinel/import/tfstate.html) import.
 
 ## Declaration and Arguments
