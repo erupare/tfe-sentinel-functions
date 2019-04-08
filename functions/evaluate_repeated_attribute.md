@@ -18,6 +18,9 @@ import "types"
 ```
 Be sure to include them in any policy that uses this function.
 
+## Custom Functions Used
+None
+
 ## What It Returns
 This function returns a list with the values of the repeated attribute for the resource instance after calling itself recursively if needed to process chained attributes of arbitrary length. However, it will sometimes return the empty list, `[]`. This could indicate that the attribute was not present in the Terraform code or that it was computed for all occurences.
 

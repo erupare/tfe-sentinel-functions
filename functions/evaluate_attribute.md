@@ -18,6 +18,9 @@ import "types"
 ```
 Be sure to include them in any policy that uses this function.
 
+## Custom Functions Used
+None
+
 ## What It Returns
 This function returns the value of the attribute for the resource instance after calling itself recursively if needed to process chained attributes of arbitrary length. However, if any item in the chained attribute has length 0 or is immediately before a number and is not a list, the function returns the string "undefined". This could indicate that the attribute was not present in the Terraform code or that it was computed in which case the chained attribute before the number will be a string instead of a list.
 

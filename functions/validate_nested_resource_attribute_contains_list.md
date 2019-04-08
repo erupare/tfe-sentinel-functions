@@ -3,7 +3,7 @@ This function validates that a specific attribute that is a map or list contains
 
 It uses the [tfplan](https://www.terraform.io/docs/enterprise/sentinel/import/tfplan.html) import.
 
-If you only need to check a top-level attribute of a resource, you can use the simpler function [validate_top_level_attribute_contains_list](./validate_top_level_attribute_contains_list). But this function works for top-level attributes too.
+If you only need to check a top-level attribute of a resource, you can use the simpler function [validate_top_level_attribute_contains_list](./validate_top_level_attribute_contains_list.md). But this function works for top-level attributes too.
 
 ## Declaration and Arguments
 
@@ -25,8 +25,8 @@ import "types"
 Be sure to include them in any policy that uses this function. The "strings" and "types" imports are needed by the evaluate_attribute function that this function calls.
 
 ## Custom Functions Used
-[find_resources_from_plan](./find_resources_from_plan)
-[evaluate_attribute](./evaluate_attribute)
+[find_resources_from_plan](./find_resources_from_plan.md)
+[evaluate_attribute](./evaluate_attribute.md)
 Be sure to past their code into your policy.
 
 ## What It Returns
