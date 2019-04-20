@@ -31,18 +31,27 @@ validate_top_level_resource_attribute_contains_list = func(resource_type, attrib
       # Get each resource instance
       for resources as _, r {
 
-        # Validate that the nested attribute is not computed.
-        # Note that this also validates that it exists
-        # We check "attribute.%" and "attribute.#" because
-        # an attribute of type map or list won't show up in
-        # the diff
-        if (r.diff[attribute + ".%"].computed else true) and
-        (r.diff[attribute + ".#"].computed else true) {
-          print("resource", name,
-            "has a missing or computed attribute:", attribute)
+        # Skip resources that are being destroyed
+        if length(r.diff) == 0 {
+          print("Skipping resource", name, "that is being destroyed.")
+          continue
+        }
+
+        # Validate that the attribute is not computed.
+        # We check "attribute.%" and "attribute.#" because an
+        # attribute of type map or list won't show up in the diff
+        if (r.diff[attribute + ".%"].computed else false) or
+        (r.diff[attribute + ".#"].computed else false) {
+          print("resource", name, "has a computed attribute:", attribute)
           return false
-        } else {
+        }
+
+        # Validate that the attribute exists
+        if (length(r.applied[attribute]) else 0) > 0 {
           applied_value = r.applied[attribute]
+        } else {
+          print("resource", name, "is missing attribute:", attribute)
+          return false
         }
 
         # Get each member of the required_values list

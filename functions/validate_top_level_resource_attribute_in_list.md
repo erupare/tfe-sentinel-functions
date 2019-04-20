@@ -31,6 +31,8 @@ This function returns true or false, depending on whether or not any instances o
 ## What It Prints
 This function prints out the name of the first resource for which the specified attribute is not in the list along with the attribute, the value of the attribute, and the complete list. The output will look like: `resource <name> has attribute, <attribute> with value <applied_value> that is not in the list: <allowed_values>.`
 
+If the resource is being destroyed, it is skipped and the function prints a message like: `Skipping resource <name> that is being destroyed`.
+
 If there are no violations, it prints out `No violators of type <resource_type> for attribute <attribute> against the list: <list>`. In this case, <list> will show the actual items of the list that was matched against.
 
 It also prints out a warning if the attribute does not exist or is computed.

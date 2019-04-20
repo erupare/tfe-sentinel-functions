@@ -34,14 +34,23 @@ validate_top_level_resource_attribute_in_list = func(resource_type, attribute, a
       # Get each resource instance
       for resources as _, r {
 
+        # Skip resources that are being destroyed
+        if length(r.diff) == 0 {
+          print("Skipping resource", name, "that is being destroyed.")
+          continue
+        }
+
         # Validate that the attribute is not computed
-        # and assign value to applied_value
-        # Note that this also validates that it exists
-        if (not (r.diff[attribute].computed else true)) {
+        if r.diff[attribute].computed else false {
+          print("resource", name, "has a computed attribute:", attribute)
+          return false
+        }
+
+        # Validate that the attribute exists
+        if (length(r.applied[attribute]) else 0) > 0 {
           applied_value = r.applied[attribute]
         } else {
-          print("resource", name,
-            "has a missing or computed attribute:", attribute)
+          print("resource", name, "is missing attribute:", attribute)
           return false
         }
 

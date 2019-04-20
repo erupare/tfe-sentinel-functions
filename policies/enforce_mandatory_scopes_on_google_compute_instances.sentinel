@@ -37,15 +37,28 @@ validate_nested_resource_attribute_contains_list = func(resource_type, attribute
       # Get each resource instance
       for resources as _, r {
 
+        # Skip resources that are being destroyed
+        if length(r.diff) == 0 {
+          print("Skipping resource", name, "that is being destroyed.")
+          continue
+        }
+
+        # Validate that the attribute is not computed.
+        # We check "attribute.%" and "attribute.#" because an
+        # attribute of type map or list won't show up in the diff
+        if (r.diff[attribute + ".%"].computed else false) or
+        (r.diff[attribute + ".#"].computed else false) {
+          print("resource", name, "has a computed attribute:", attribute)
+          return false
+        }
+
         # Call the evaluate_attribute function
         applied_value = evaluate_attribute(r.applied, attribute)
 
         # Check if evaluate_attribute returned undefined
         if types.type_of(applied_value) is "string" and
           applied_value is "undefined" {
-          print("resource", name,
-            "has attribute", attribute,
-            "that is missing or computed")
+          print("resource", name, "has a missing attribute", attribute)
           return false
         }
 
@@ -70,6 +83,7 @@ validate_nested_resource_attribute_contains_list = func(resource_type, attribute
     attribute, "against the list:", required_values)
   return true
 }
+
 
 ### find_resources_from_plan ###
 # This function gets all instances of a specific resource

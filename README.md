@@ -42,6 +42,7 @@ These functions evaluate attributes:
 
 ## Some Comments on the Functions
 The following comments about these functions might be useful or interesting.
+1. The validate functions check if `length(r.diff) == 0` for each resource which will be true when it is being destroyed. In this case, the resource is skipped and a message is printed saying that.
 1. Functions that support nested attributes support them arbitrarily deep within resources by using recursion to parse the attributes as "chained attributes".
 1. The [evaluate_attribute](./functions/evaluate_attribute.md) function and functions that call it expect chained attributes like `tags.Name` and  `storage_image_reference.0.publisher`. This function expects any index of a list to only occur once. If a plan log for the resource you are working with shows a longer ID, please use 0 instead. You could also use 1, 2, 3, etc. if calling the function multiple times to process multiple values of the index, but it is probably then better to use a function that calls the evaluate_repeated_attribute function instead of this one.  This function returns the actual value of the evaluated attribute.
 1. The [evaluate_repeated_attribute](./functions/evaluate_repeated_attribute.md) function and functions that call it expect chained attributes like `ingress.*.cidr_blocks.*` in which `*` represents repeating indices. This function returns a list of evaluated attributes.

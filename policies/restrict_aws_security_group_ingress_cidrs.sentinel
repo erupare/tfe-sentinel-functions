@@ -43,9 +43,14 @@ validate_repeated_nested_resource_attribute_in_list = func(resource_type, attrib
       # Get each resource instance
       for resources as _, r {
 
+        # Skip resources that are being destroyed
+        if length(r.diff) == 0 {
+          print("Skipping resource", name, "that is being destroyed.")
+          continue
+        }
+
         # Call the evaluate_repeated_attribute function
         applied_values = evaluate_repeated_attribute(r.applied, attribute)
-        print("applied values are:", applied_values)
 
         # Check if evaluate_repeated_attribute returned empty list
         if (length(applied_values) else 0) == 0 {
